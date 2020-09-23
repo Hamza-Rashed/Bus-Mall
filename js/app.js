@@ -45,6 +45,20 @@ for (let i = 0; i < images.length; i++) {
   new Vote(images[i].name,images[i].ext);
 }
 
+function setProducts(){
+  localStorage.setItem('products', JSON.stringify(Vote.all));
+}
+function getProducts(){
+  let productsLocalStorage = JSON.parse(localStorage.getItem('products'));
+  if (productsLocalStorage){
+    Vote.all = [];
+    for (let i=0;i<productsLocalStorage.length;i++){
+      new Vote(productsLocalStorage[i].path.split('/')[1], productsLocalStorage[i].times_showes, productsLocalStorage[i].votes);
+    }
+  }
+  render();
+}
+
 function render() {
 
     var left_side = left_image_show();
@@ -126,6 +140,7 @@ function end_event(event) {
           Vote.all[i].votes++;
         }
       }
+      setProducts();
       render();
     }
     if (counter_end_event === 26) {
