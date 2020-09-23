@@ -4,7 +4,7 @@
 }
 
 body{
-    background: radial-gradient(ellipse at center, rgb(122, 73, 32) 0%, rgb(119, 118, 112) 35%, #0f787e 100%);
+    background: radial-gradient(ellipse at center, rgb(255, 222, 194) 0%, rgb(255, 234, 114) 35%, #a0faff 100%);
 }
 
 header{
@@ -20,7 +20,7 @@ header ul li{
 header ul li a{
     text-decoration: none;
     font-size: 25px;
-    color: white;
+    color: rgb(24, 0, 158);
 }
 
 span{

@@ -1,206 +1,153 @@
 'use strict';
 
-let images = [{
-    name: 'pen',
-    ext: 'jpg'
-  },
-  {
-    name: 'pet-sweep',
-    ext: 'jpg'
-  },
-  {
-    name: 'scissors',
-    ext: 'jpg'
-  },
-  {
-    name: 'bag',
-    ext: 'jpg'
-  },
-  {
-    name: 'banana',
-    ext: 'jpg'
-  },
-  {
-    name: 'bathroom',
-    ext: 'jpg'
-  },
-  {
-    name: 'boots',
-    ext: 'jpg'
-  },
-  {
-    name: 'shark',
-    ext: 'jpg'
-  },
-  {
-    name: 'breakfast',
-    ext: 'jpg'
-  },
-  {
-    name: 'sweep',
-    ext: 'png'
-  },
-  {
-    name: 'bubblegum',
-    ext: 'jpg'
-  },
-  {
-    name: 'tauntaun',
-    ext: 'jpg'
-  },
-  {
-    name: 'chair',
-    ext: 'jpg'
-  },
-  {
-    name: 'unicorn',
-    ext: 'jpg'
-  },
-  {
-    name: 'cthulhu',
-    ext: 'jpg'
-  },
-  {
-    name: 'usb',
-    ext: 'gif'
-  },
-  {
-    name: 'dog-duck',
-    ext: 'jpg'
-  },
-  {
-    name: 'water-can',
-    ext: 'jpg'
-  },
-  {
-    name: 'dragon',
-    ext: 'jpg'
-  },
-  {
-    name: 'wine-glass',
-    ext: 'jpg'
-  },
+let images = [
+  {name:'bag',ext:'jpg'},
+  {name:'pen',ext:'jpg'},
+  {name:'banana',ext:'jpg'},
+  {name:'pet-sweep',ext:'jpg'},
+  {name:'bathroom',ext:'jpg'},
+  {name:'scissors',ext:'jpg'},
+  {name:'boots',ext:'jpg'},
+  {name:'shark',ext:'jpg'},
+  {name:'breakfast',ext:'jpg'},
+  {name:'sweep',ext:'png'},
+  {name:'bubblegum',ext:'jpg'},
+  {name:'tauntaun',ext:'jpg'},
+  {name:'chair',ext:'jpg'},
+  {name:'unicorn',ext:'jpg'},
+  {name:'cthulhu',ext:'jpg'},
+  {name:'usb',ext:'gif'},
+  {name:'dog-duck',ext:'jpg'},
+  {name:'water-can',ext:'jpg'},
+  {name:'dragon',ext:'jpg'},
+  {name:'wine-glass',ext:'jpg'},
 ];
+let arrr = [];
+let counter_end_event = 0;
+const left_image = document.getElementById('left-image');
+const mid_image = document.getElementById('mid-image');
+const right_image = document.getElementById('right-image');
+const imagesSection = document.getElementById('images-Section');
+const result = document.getElementById('result');
 
-let left_image = document.getElementById('left-image');
-let mid_image = document.getElementById('mid-image');
-let right_image = document.getElementById('right-image');
-let imagesSection = document.getElementById('images-Section');
-let result = document.getElementById('result');
-let again = document.getElementById('again')
-let Vote_arr = [];
-
-function Vote(name, ext) {
+function Vote(name,ext) {
   this.name = name;
   this.ext = ext;
   this.image_path = `img/${name}.${ext}`;
   this.votes = 0;
-  this.times_showes = 1;
-  Vote_arr.push(this);
+  this.times_showes = 0;
+  Vote.all.push(this);
+
 }
+Vote.all = [];
 
 for (let i = 0; i < images.length; i++) {
-  new Vote(images[i].name, images[i].ext);
+  new Vote(images[i].name,images[i].ext);
 }
-
-let num_picture;
 
 function render() {
 
-  while (left_side === mid_side || right_side === mid_side || left_side === right_side) {
-    var right_side = Vote_arr[randomNumber(0, Vote_arr.length - 1)];
-    var left_side = Vote_arr[randomNumber(0, Vote_arr.length - 1)];
-    var mid_side = Vote_arr[randomNumber(0, Vote_arr.length - 1)];
-  }
-  num_picture = images.splice(0, 3)
-  if (num_picture.length == 2) {
-    left_image.src = `../img/${num_picture[0].name}.${num_picture[0].ext}`
-    left_image.title = num_picture[0].name;
-    mid_image.src = `../img/${num_picture[1].name}.${num_picture[1].ext}`
-    mid_image.title = num_picture[1].name;
-    right_image.src = ``;
-    right_image.title = ``;
+    var left_side = left_image_show();
+    var mid_side = mid_image_show(left_side);
+    var right_side = right_image_show(left_side,mid_side);
+    console.log(left_side)
+    console.log(mid_side)
+    console.log(right_side)
+    arrr = [right_side,left_side,mid_side]
 
-  } else if (num_picture.length == 3) {
-    left_image.src = `../img/${num_picture[0].name}.${num_picture[0].ext}`
-    left_image.title = num_picture[0].name;
-    right_image.src = `../img/${num_picture[1].name}.${num_picture[1].ext}`
-    right_image.title = num_picture[1].name;
-    mid_image.src = `../img/${num_picture[2].name}.${num_picture[2].ext}`
-    mid_image.title = num_picture[2].name;
-  }
+    Vote.all[left_side].times_showes++;
+    Vote.all[right_side].times_showes++;
+  Vote.all[mid_side].times_showes++;
+
+  left_image.src = Vote.all[left_side].image_path;
+  left_image.title = Vote.all[left_side].name;
+  mid_image.src = Vote.all[mid_side].image_path;
+  mid_image.title = Vote.all[mid_side].name;
+  right_image.src = Vote.all[right_side].image_path;
+  right_image.title = Vote.all[right_side].name;
+  counter_end_event++;
 }
-let array_local = [];
-
-function send_local_storage() {
-
-
-  for (let i = 0; i < Vote_arr.length; i++) {
-
-    array_local.push({
-      name: Vote_arr[i].name,
-      Votes: Vote_arr[i].votes,
-      Showes: Vote_arr[i].times_showes
-    })
-    localStorage.setItem('product', JSON.stringify(array_local))
-
-  }
-  console.log(array_local)
-  show_result();
-}
-
 
 function show_result() {
   let ulEl = document.createElement('ul');
   result.appendChild(ulEl);
-  let all_info = JSON.parse(localStorage.getItem('product'));
-  for (let i = 0; i < all_info.length; i++) {
+  for (let i = 0; i < Vote.all.length; i++) {
     let liEl = document.createElement('li');
     ulEl.appendChild(liEl);
-    console.log(all_info[i].name)
-    liEl.innerHTML = `<span>${all_info[i].name}</span> had<span> ${all_info[i].Votes}</span> votes and was shown <span>${all_info[i].Showes}</span> times`;
+    liEl.innerHTML = `<span>${images[i].name}</span> had<span> ${Vote.all[i].votes}</span> votes and was shown <span>${Vote.all[i].times_showes}</span> times`;
   }
-
 }
+
+function randomNumber(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
+function prev_image(index) {
+  for (let i = 0; i < arrr.length; i++) {
+    console.log(arrr[i])
+    if (index === arrr[i]) {
+      return (true);
+    }
+  }
+  return (false);
+}
+function left_image_show() {
+  let leftIndex = randomNumber(0, Vote.all.length - 1);
+  while (prev_image(leftIndex)) {
+    leftIndex = randomNumber(0, Vote.all.length - 1);
+  }
+  return (leftIndex);
+}
+
+function mid_image_show(leftIndex) {
+  let midIndex = randomNumber(0, Vote.all.length - 1);
+  while (prev_image(midIndex) || midIndex === leftIndex) {
+    midIndex = randomNumber(0, Vote.all.length - 1);
+  }
+  return (midIndex);
+}
+function right_image_show(leftIndex, midIndex) {
+  let rightIndex = randomNumber(0, Vote.all.length - 1);
+  while (prev_image(rightIndex) || rightIndex === leftIndex || rightIndex === midIndex) {
+    rightIndex = randomNumber(0, Vote.all.length - 1);
+  }
+  return (rightIndex);
+}
+
 
 render();
 
 function end_event(event) {
-  // let votes_value = JSON.parse(localStorage.getItem('product'));
-  if (event.target.id !== 'images-Section') {
-    for (let i = 0; i < Vote_arr.length; i++) {
-      if (event.target.title === Vote_arr[i].name) {
-        Vote_arr[i].votes++;
-        //  array_local[1] = Vote_arr[i].votes
+  if (counter_end_event <= 25) {
+    if (event.target.id !== 'images-Section') {
+      for (let i = 0; i < Vote.all.length; i++) {
+        if (event.target.title === Vote.all[i].name) {
+          Vote.all[i].votes++;
+        }
       }
+      render();
     }
-    render();
-  }
-  if (num_picture.length == 0) {
-    send_local_storage();
-again.style.display = 'block'
-    create_chart();
-    imagesSection.style.display = 'none';
+    if (counter_end_event === 26) {
+      show_result();
+      create_chart();
+    }
   }
 }
 
 imagesSection.addEventListener('click', end_event);
 
 // helper function
-function randomNumber(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 
 function create_chart() {
 
   let name = [];
   let views = [];
   let votes = [];
-  for (let info in Vote_arr) {
-    name.push(Vote_arr[info].name);
-    views.push(Vote_arr[info].times_showes);
-    votes.push(Vote_arr[info].votes);
+  for (let info in Vote.all) {
+    name.push(Vote.all[info].name);
+    views.push(Vote.all[info].times_showes);
+    votes.push(Vote.all[info].votes);
     // console.log(Vote_arr)
   }
 
