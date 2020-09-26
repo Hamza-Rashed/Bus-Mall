@@ -1,5 +1,5 @@
 'use strict';
-
+// this object for all images and extentions for it
 let images = [
   {name:'bag',ext:'jpg'},
   {name:'pen',ext:'jpg'},
@@ -29,7 +29,7 @@ const mid_image = document.getElementById('mid-image');
 const right_image = document.getElementById('right-image');
 const imagesSection = document.getElementById('images-Section');
 const result = document.getElementById('result');
-
+//  this is the constructor function 
 function Vote(name,ext) {
   this.name = name;
   this.ext = ext;
@@ -39,12 +39,27 @@ function Vote(name,ext) {
   Vote.all.push(this);
 
 }
-Vote.all = [];
+Vote.all = []; // this array to push all the object on it 
 
 for (let i = 0; i < images.length; i++) {
   new Vote(images[i].name,images[i].ext);
 }
-
+// set Item on local storage
+function setProducts(){
+  localStorage.setItem('products', JSON.stringify(Vote.all));
+}
+// get Item from local storage
+function getProducts(){
+  let productsLocalStorage = JSON.parse(localStorage.getItem('products'));
+  if (productsLocalStorage){
+    Vote.all = [];
+    for (let i=0;i<productsLocalStorage.length;i++){
+      new Vote(productsLocalStorage[i].path.split('/')[1], productsLocalStorage[i].times_showes, productsLocalStorage[i].votes);
+    }
+  }
+  render();
+}
+// render the all picture 
 function render() {
 
     var left_side = left_image_show();
@@ -67,7 +82,7 @@ function render() {
   right_image.title = Vote.all[right_side].name;
   counter_end_event++;
 }
-
+// show the finall result
 function show_result() {
   let ulEl = document.createElement('ul');
   result.appendChild(ulEl);
@@ -77,7 +92,7 @@ function show_result() {
     liEl.innerHTML = `<span>${images[i].name}</span> had<span> ${Vote.all[i].votes}</span> votes and was shown <span>${Vote.all[i].times_showes}</span> times`;
   }
 }
-
+// random number
 function randomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -117,7 +132,7 @@ function right_image_show(leftIndex, midIndex) {
 
 
 render();
-
+// this function for submit 
 function end_event(event) {
   if (counter_end_event <= 25) {
     if (event.target.id !== 'images-Section') {
@@ -126,6 +141,7 @@ function end_event(event) {
           Vote.all[i].votes++;
         }
       }
+      setProducts();
       render();
     }
     if (counter_end_event === 26) {
@@ -137,7 +153,7 @@ function end_event(event) {
 
 imagesSection.addEventListener('click', end_event);
 
-// helper function
+// for chart js
 
 function create_chart() {
 
